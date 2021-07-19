@@ -15,8 +15,8 @@ def main():
     labels = ['left', 'right']
     colors = ['royalblue', 'orange']
 
-    controller = DeviceGraphController(devices, start_at, end_at)
-    controller.show_graph(labels, colors)
+    d = DeviceGraphController(devices, start_at, end_at)
+    d.show_graph(labels, colors)
 
 
 main()

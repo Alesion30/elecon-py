@@ -30,10 +30,19 @@ class DeviceGraphController():
         return id_list
 
     def show_graph(self, labels: list[str], colors: list[str]):
+        """
+        グラフを生成・表示
+
+        @params list[str] labels ラベル
+        @params list[str] colors 色
+        """
         id_list = self.get_id_list()
         for id in id_list:
             # 各デバイスのグラフに必要なデータを格納
             l = []
+
+            # 強い信号を含むかどうか
+            is_strong: list[bool] = []
 
             for data in self.datas:
                 if(id in data):
@@ -49,17 +58,24 @@ class DeviceGraphController():
                     created_list.append(v['created'])
                 l.append({'rssi': rssi_list, 'created': created_list})
 
-            # グラフ作成
-            fig = plt.figure()
-            plt.title(id)
-            plt.xlabel("time")
-            plt.ylabel("rssi")
+                # 強い信号を含むかどうか
+                if (len(rssi_list) == 0):
+                    is_strong.append(False)
+                else:
+                    is_strong.append(max(rssi_list) > -70)
 
-            for i, j in enumerate(l):
-                label = labels[i]
-                color = colors[i]
-                plt.plot(j['created'], j['rssi'], color=color, label=label)
+            if (True in is_strong):
+                # グラフ作成
+                fig = plt.figure()
+                plt.title(id)
+                plt.xlabel("time")
+                plt.ylabel("rssi")
 
-            plt.grid(True)
-            plt.legend()
-            plt.show()
+                for i, j in enumerate(l):
+                    label = labels[i]
+                    color = colors[i]
+                    plt.plot(j['created'], j['rssi'], color=color, label=label)
+
+                plt.grid(True)
+                plt.legend()
+                plt.show()

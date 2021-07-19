@@ -14,9 +14,9 @@ def main():
     end_at = datetime.datetime(2021, 7, 19, 18, 0, 0, tzinfo=tz_jst)
 
     # 各種デバイスの設定
-    devices = ['0881269a1ac6746f', 'd742f58d5e3c5ef7']
-    labels = ['left', 'right']
-    colors = ['royalblue', 'orange']
+    devices = ['0881269a1ac6746f', 'd742f58d5e3c5ef7', '4f3b8bb564a3203c']
+    labels = ['left', 'right', '9F']
+    colors = ['royalblue', 'orange', 'yellow']
 
     # グラフを表示
     d = DeviceGraphController(devices, start_at, end_at)

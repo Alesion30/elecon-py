@@ -55,9 +55,9 @@ class DeviceController(FirestoreController):
         data = list(map(self._cast, data))
         return data
 
-    def get_device_list_data(self, start_at: datetime = None, end_at: datetime = None):
+    def get_device_id_data(self, start_at: datetime = None, end_at: datetime = None) -> dict:
         """
-        デバイス毎にデータを取得する
+        id毎にデータを取得する
         """
         device = {}
         data = self.get_ble_docs_data()
@@ -68,7 +68,7 @@ class DeviceController(FirestoreController):
             obj = {'rssi': rssi, 'created': created}
 
             if (id in device):
-                device[id] += obj
+                device[id].append(obj)
             else:
                 device[id] = [obj]
 

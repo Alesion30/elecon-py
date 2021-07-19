@@ -29,7 +29,7 @@ class DeviceGraphController():
                 id_list.append(device_id)
 
         # 重複削除
-        list(set(id_list))
+        id_list = list(set(id_list))
         return id_list
 
     def show_graph(self, labels: list[str], colors: list[str]):
@@ -88,7 +88,7 @@ class DeviceGraphController():
                 plt.ylabel("rssi")
 
                 ax = plt.subplot()
-                # plt.ylim(-80, -40) # y軸の範囲
+                plt.ylim(-100, -20) # y軸の範囲
                 ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), 1, tz=tz_jst))
                 ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 

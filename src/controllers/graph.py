@@ -1,5 +1,7 @@
 from controllers.device import DeviceController
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from plugin.datetime import tz_jst
 import datetime
 
 
@@ -55,7 +57,8 @@ class DeviceGraphController():
                 created_list: list[datetime] = []
                 for v in item:
                     rssi_list.append(v['rssi'])
-                    created_list.append(v['created'])
+                    # TODO ここは+9時間とせずに、グラフ側の設定でなんとかしたい、、
+                    created_list.append(v['created'] + datetime.timedelta(hours=9))
                 l.append({'rssi': rssi_list, 'created': created_list})
 
                 # 強い信号を含むかどうか
@@ -66,16 +69,19 @@ class DeviceGraphController():
 
             if (True in is_strong):
                 # グラフ作成
-                fig = plt.figure()
                 plt.title(id)
                 plt.xlabel("time")
                 plt.ylabel("rssi")
 
+                ax = plt.subplot()
+                ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), 1, tz=tz_jst))
+                ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+
                 for i, j in enumerate(l):
                     label = labels[i]
                     color = colors[i]
-                    plt.plot(j['created'], j['rssi'], color=color, label=label)
+                    ax.plot(j['created'], j['rssi'], color=color, label=label)
 
-                plt.grid(True)
-                plt.legend()
+                ax.grid(True)
+                ax.legend()
                 plt.show()

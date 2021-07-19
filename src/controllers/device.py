@@ -60,7 +60,7 @@ class DeviceController(FirestoreController):
         id毎にデータを取得する
         """
         device = {}
-        data = self.get_ble_docs_data()
+        data = self.get_ble_docs_data(start_at, end_at)
         for item in data:
             id = item['id']
             rssi = item['rssi']

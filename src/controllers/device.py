@@ -37,7 +37,7 @@ class DeviceController(FirestoreController):
 
         if (end_at == None):
             end_at = datetime.datetime.now(
-                tzinfo=tz_jst) + datetime.timedelta(days=1)
+                tz=tz_jst) + datetime.timedelta(days=1)
 
         docs = self.ble_collection.where('created', '>=', start_at).where(
             'created', '<=', end_at).get()
@@ -54,6 +54,25 @@ class DeviceController(FirestoreController):
 
         data = list(map(self._cast, data))
         return data
+
+    def get_device_list_data(self, start_at: datetime = None, end_at: datetime = None):
+        """
+        デバイス毎にデータを取得する
+        """
+        device = {}
+        data = self.get_ble_docs_data()
+        for item in data:
+            id = item['id']
+            rssi = item['rssi']
+            created = item['created']
+            obj = {'rssi': rssi, 'created': created}
+
+            if (id in device):
+                device[id] += obj
+            else:
+                device[id] = [obj]
+
+        return device
 
     def _cast(self, data: dict) -> dict:
         """

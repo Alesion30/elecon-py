@@ -12,9 +12,9 @@ def main():
     start_at = datetime.datetime(2021, 7, 19, 17, 0, 0, tzinfo=tz_jst)
     end_at = datetime.datetime(2021, 7, 19, 17, 1, 0, tzinfo=tz_jst)
 
-    docs = device_controller.get_ble_docs_data(start_at, end_at)
-    for doc in docs:
-        print(doc)
+    data = device_controller.get_device_list_data(start_at, end_at)
+    for device_id in data:
+        print(device_id)
 
 
 main()

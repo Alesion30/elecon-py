@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from plugin.datetime import tz_jst
 import datetime
+import numpy as np
 
 
 class DeviceGraphController():
@@ -59,6 +60,19 @@ class DeviceGraphController():
                     rssi_list.append(v['rssi'])
                     # TODO ここは+9時間とせずに、グラフ側の設定でなんとかしたい、、
                     created_list.append(v['created'] + datetime.timedelta(hours=9))
+                created_list = np.array(created_list)
+                rssi_list = np.array(rssi_list)
+
+                # 移動平均
+                num = 3
+                if (len(rssi_list) >= num):
+                    rssi_list = np.convolve(rssi_list, np.ones(num) / num, mode='same')
+                    rssi_list = np.delete(rssi_list, 0)
+                    rssi_list = np.delete(rssi_list, len(rssi_list) - 1)
+                    created_list = np.delete(created_list, 0)
+                    created_list = np.delete(created_list, len(created_list) - 1)
+
+                # グラフにデータを追加
                 l.append({'rssi': rssi_list, 'created': created_list})
 
                 # 強い信号を含むかどうか

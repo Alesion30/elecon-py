@@ -47,6 +47,10 @@ class DeviceGraphController():
             # 強い信号を含むかどうか
             is_strong: list[bool] = []
 
+            # created_list 最小・最大
+            created_min_list = []
+            created_max_list = []
+
             for data in self.datas:
                 if(id in data):
                     item: list = data[id]
@@ -83,6 +87,17 @@ class DeviceGraphController():
                 else:
                     is_strong.append(max(rssi_list) > -70)
 
+                # 最小値・最大値 セット
+                if len(created_list) > 0:
+                    created_min_list.append(min(created_list))
+                    created_max_list.append(max(created_list))
+
+            # x軸 最大値・最小値
+            if len(created_min_list) > 0:
+                created_min = min(created_min_list)
+            if len(created_max_list) > 0:
+                created_max = max(created_max_list)
+
             if (True in is_strong):
                 # 画像
                 if is_save:
@@ -96,8 +111,13 @@ class DeviceGraphController():
                 ax = plt.subplot()
                 plt.ylim(-100, -20)  # y軸の範囲
                 ax.xaxis.set_major_locator(
-                    mdates.MinuteLocator(range(60), 1, tz=tz_jst))
+                    mdates.MinuteLocator(range(60), 2, tz=tz_jst))
                 ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+
+                # 横線
+                threshold = -70
+                plt.plot([created_min, created_max], [threshold, threshold],
+                         "red", linestyle='dashed')
 
                 for i, j in enumerate(l):
                     label = labels[i]
@@ -109,5 +129,6 @@ class DeviceGraphController():
 
                 if is_save:
                     fig.savefig(f"img/{id}.png")
+                    print(f"saved♩♩ img/{id}.png")
                 else:
                     plt.show()

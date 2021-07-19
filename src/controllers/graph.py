@@ -1,7 +1,7 @@
 from controllers.device import DeviceController
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from plugin.datetime import tz_jst
+from plugin.datetime import tz_jst, td_jst
 import datetime
 import numpy as np
 
@@ -59,7 +59,7 @@ class DeviceGraphController():
                 for v in item:
                     rssi_list.append(v['rssi'])
                     # TODO ここは+9時間とせずに、グラフ側の設定でなんとかしたい、、
-                    created_list.append(v['created'] + datetime.timedelta(hours=9))
+                    created_list.append(v['created'] + td_jst)
                 created_list = np.array(created_list)
                 rssi_list = np.array(rssi_list)
 

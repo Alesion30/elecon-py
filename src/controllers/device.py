@@ -1,7 +1,9 @@
 from google.cloud.firestore_v1.base_document import DocumentSnapshot
+from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 from controllers.firestore import FirestoreController
-from plugin.datetime import tz_jst
+from plugin.datetime import tz_jst, to_datetime
 import datetime
+
 
 class DeviceController(FirestoreController):
     def __init__(self, device_id: str):
@@ -24,7 +26,7 @@ class DeviceController(FirestoreController):
         doc = self.document.get()
         return doc
 
-    def get_ble_docs(self, start_at=None, end_at=None) -> list[DocumentSnapshot]:
+    def get_ble_docs(self, start_at: datetime = None, end_at: datetime = None) -> list[DocumentSnapshot]:
         """
         BLEコレクションのデータを取得
 
@@ -34,8 +36,31 @@ class DeviceController(FirestoreController):
             start_at = datetime.datetime(1970, 1, 1, 0, 0, 0, 0, tzinfo=tz_jst)
 
         if (end_at == None):
-            end_at = datetime.datetime.now(tzinfo=tz_jst) + datetime.timedelta(days=1)
+            end_at = datetime.datetime.now(
+                tzinfo=tz_jst) + datetime.timedelta(days=1)
 
         docs = self.ble_collection.where('created', '>=', start_at).where(
             'created', '<=', end_at).get()
         return docs
+
+    def get_ble_docs_data(self, start_at: datetime = None, end_at: datetime = None) -> list[dict]:
+        """
+        BLEデータを配列として返す
+        """
+        docs = self.get_ble_docs(start_at, end_at)
+        data = []
+        for doc in docs:
+            data += doc.get('data')
+
+        data = list(map(self._cast, data))
+        return data
+
+    def _cast(self, data: dict) -> dict:
+        """
+        BLE/{docId}/dataを変換
+        """
+        id: str = data.get('id')
+        rssi: int = data.get('rssi')
+        created_timestamp: DatetimeWithNanoseconds = data.get('created')
+        created = to_datetime(created_timestamp)
+        return {'id': id, 'rssi': rssi, 'created': created}

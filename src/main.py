@@ -1,6 +1,6 @@
 from plugin.firebase import fb_initialize_app, db_client
 from plugin.datetime import tz_jst
-from controller.firestore import DeviceController
+from controllers.device import DeviceController
 import datetime
 
 

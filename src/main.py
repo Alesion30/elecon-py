@@ -20,7 +20,7 @@ def main():
 
     # グラフを表示
     d = DeviceGraphController(devices, start_at, end_at)
-    d.show_graph(labels, colors)
+    d.show_graph(labels, colors, is_save=True)
 
 
 main()

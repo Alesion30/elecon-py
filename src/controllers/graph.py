@@ -32,7 +32,7 @@ class DeviceGraphController():
         id_list = list(set(id_list))
         return id_list
 
-    def show_graph(self, labels: list[str], colors: list[str]):
+    def show_graph(self, labels: list[str], colors: list[str], is_save: bool = False):
         """
         グラフを生成・表示
 
@@ -66,11 +66,13 @@ class DeviceGraphController():
                 # 移動平均
                 num = 3
                 if (len(rssi_list) >= num):
-                    rssi_list = np.convolve(rssi_list, np.ones(num) / num, mode='same')
+                    rssi_list = np.convolve(
+                        rssi_list, np.ones(num) / num, mode='same')
                     rssi_list = np.delete(rssi_list, 0)
                     rssi_list = np.delete(rssi_list, len(rssi_list) - 1)
                     created_list = np.delete(created_list, 0)
-                    created_list = np.delete(created_list, len(created_list) - 1)
+                    created_list = np.delete(
+                        created_list, len(created_list) - 1)
 
                 # グラフにデータを追加
                 l.append({'rssi': rssi_list, 'created': created_list})
@@ -82,14 +84,19 @@ class DeviceGraphController():
                     is_strong.append(max(rssi_list) > -70)
 
             if (True in is_strong):
+                # 画像
+                if is_save:
+                    fig = plt.figure()
+
                 # グラフ作成
                 plt.title(id)
                 plt.xlabel("time")
                 plt.ylabel("rssi")
 
                 ax = plt.subplot()
-                plt.ylim(-100, -20) # y軸の範囲
-                ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), 1, tz=tz_jst))
+                plt.ylim(-100, -20)  # y軸の範囲
+                ax.xaxis.set_major_locator(
+                    mdates.MinuteLocator(range(60), 1, tz=tz_jst))
                 ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
                 for i, j in enumerate(l):
@@ -99,4 +106,8 @@ class DeviceGraphController():
 
                 ax.grid(True)
                 ax.legend()
-                plt.show()
+
+                if is_save:
+                    fig.savefig(f"img/{id}.png")
+                else:
+                    plt.show()

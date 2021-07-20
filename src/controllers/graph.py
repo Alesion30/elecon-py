@@ -15,6 +15,13 @@ class DeviceGraphController():
 
         @params list[str] id_list デバイスID
         """
+        print("\n//////////////////////////////////////////////////")
+        print('♪♪ DeviceGraphController Initialized ♪♪\n')
+        print("deviceID")
+        for id in id_list:
+            print(f" - {id}")
+        print("//////////////////////////////////////////////////\n")
+
         self.id_list = id_list
         self.devices: list[DeviceController] = list(
             map(lambda x: DeviceController(x), id_list))  # デバイスコントローラーリスト

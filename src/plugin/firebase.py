@@ -9,7 +9,7 @@ def fb_initialize_app():
     """
     cred = credentials.Certificate("serviceAccountKey.json")
     firebase_admin.initialize_app(cred)
-    print("//////////////////////////////////////////////////")
+    print("\n//////////////////////////////////////////////////")
     print('♪♪ Firebase Initialized ♪♪')
     print("//////////////////////////////////////////////////\n")
 

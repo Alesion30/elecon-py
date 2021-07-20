@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from plugin.datetime import tz_jst, td_jst
 import datetime
+import math
 import numpy as np
 
 
@@ -98,6 +99,11 @@ class DeviceGraphController():
             if len(created_max_list) > 0:
                 created_max = max(created_max_list)
 
+            # x軸の間隔を設定
+            diff_created_sec: int = (created_max - created_min).seconds
+            diff_created_min: int = math.ceil(diff_created_sec / 60)
+            diff_created_div: int = math.ceil(diff_created_min / 10)
+
             if (True in is_strong):
                 # 画像
                 if is_save:
@@ -111,7 +117,7 @@ class DeviceGraphController():
                 ax = plt.subplot()
                 plt.ylim(-100, -20)  # y軸の範囲
                 ax.xaxis.set_major_locator(
-                    mdates.MinuteLocator(range(60), 2, tz=tz_jst))
+                    mdates.MinuteLocator(range(60), diff_created_div, tz=tz_jst))
                 ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
                 # 横線

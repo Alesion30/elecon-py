@@ -4,6 +4,7 @@ import matplotlib.dates as mdates
 from plugin.datetime import tz_jst, td_jst
 import datetime
 import math
+import os
 import numpy as np
 
 
@@ -41,6 +42,9 @@ class DeviceGraphController():
         @params list[str] colors 色
         """
         id_list = self.get_id_list()
+        now = datetime.datetime.now(tz_jst)
+        nowstr = now.strftime("%Y年%m月%d日 %H時%M分%S秒")
+        print(f"♫ Start show_graph() ♫  {nowstr}\n")
         for id in id_list:
             # 各デバイスのグラフに必要なデータを格納
             l = []
@@ -134,7 +138,11 @@ class DeviceGraphController():
                 ax.legend()
 
                 if is_save:
-                    fig.savefig(f"img/{id}.png")
-                    print(f"saved♩♩ img/{id}.png")
+                    nowstr = now.strftime("%Y%m%d%H%M%S")
+                    path = f"img/{nowstr}"
+                    if not os.path.isdir(path):
+                        os.makedirs(path)
+                    fig.savefig(f"{path}/{id}.png")
+                    print(f"saved♩♩ {path}/{id}.png")
                 else:
                     plt.show()

@@ -8,15 +8,15 @@ import os
 import numpy as np
 
 
-class DeviceGraphController():
-    def __init__(self, id_list: list[str], start_at: datetime = None, end_at: datetime = None):
+class BleGraphController():
+    def __init__(self, id_list: list[str], start_at: datetime, end_at: datetime):
         """
         id毎にBLE信号のグラフを生成するためのコントローラー
 
         @params list[str] id_list デバイスID
         """
         print("\n//////////////////////////////////////////////////")
-        print('♪♪ DeviceGraphController Initialized ♪♪\n')
+        print('♪♪ BleGraphController Initialized ♪♪\n')
         print("deviceID")
         for id in id_list:
             print(f" - {id}")
@@ -24,9 +24,8 @@ class DeviceGraphController():
 
         self.id_list = id_list
         self.devices: list[DeviceController] = list(
-            map(lambda x: DeviceController(x), id_list))  # デバイスコントローラーリスト
-        self.datas = list(map(lambda x: x.get_device_id_data(
-            start_at, end_at), self.devices))  # DBから取得したデータ
+            map(lambda x: DeviceController(x, start_at, end_at), id_list))  # デバイスコントローラーリスト
+        self.datas = list(map(lambda x: x.get_device_id_data(), self.devices))  # DBから取得したデータ
 
     def get_id_list(self):
         """
@@ -76,33 +75,33 @@ class DeviceGraphController():
                     rssi_list.append(v['rssi'])
                     # TODO ここは+9時間とせずに、グラフ側の設定でなんとかしたい、、
                     created_list.append(v['created'] + td_jst)
-                created_list = np.array(created_list)
-                rssi_list = np.array(rssi_list)
+                x_list = np.array(created_list)
+                y_list = np.array(rssi_list)
 
                 # 移動平均
                 num = 3
-                if (len(rssi_list) >= num):
-                    rssi_list = np.convolve(
-                        rssi_list, np.ones(num) / num, mode='same')
-                    rssi_list = np.delete(rssi_list, 0)
-                    rssi_list = np.delete(rssi_list, len(rssi_list) - 1)
-                    created_list = np.delete(created_list, 0)
-                    created_list = np.delete(
-                        created_list, len(created_list) - 1)
+                if (len(y_list) >= num):
+                    y_list = np.convolve(
+                        y_list, np.ones(num) / num, mode='same')
+                    y_list = np.delete(y_list, 0)
+                    y_list = np.delete(y_list, len(y_list) - 1)
+                    x_list = np.delete(x_list, 0)
+                    x_list = np.delete(
+                        x_list, len(x_list) - 1)
 
                 # グラフにデータを追加
-                l.append({'rssi': rssi_list, 'created': created_list})
+                l.append({'x': y_list, 'y': x_list})
 
                 # 強い信号を含むかどうか
-                if (len(rssi_list) == 0):
+                if (len(y_list) == 0):
                     is_strong.append(False)
                 else:
-                    is_strong.append(max(rssi_list) > -70)
+                    is_strong.append(max(y_list) > -70)
 
                 # 最小値・最大値 セット
                 if len(created_list) > 0:
-                    created_min_list.append(min(created_list))
-                    created_max_list.append(max(created_list))
+                    created_min_list.append(min(x_list))
+                    created_max_list.append(max(x_list))
 
             # x軸 最大値・最小値
             if len(created_min_list) > 0:
@@ -139,7 +138,7 @@ class DeviceGraphController():
                 for i, j in enumerate(l):
                     label = labels[i]
                     color = colors[i]
-                    ax.plot(j['created'], j['rssi'], color=color, label=label)
+                    ax.plot(j['x'], j['y'], color=color, label=label)
 
                 ax.grid(True)
                 ax.legend()

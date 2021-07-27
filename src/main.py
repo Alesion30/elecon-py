@@ -11,8 +11,8 @@ def main():
     fb_initialize_app()
 
     # 取得期間
-    start_at = datetime.datetime(2021, 7, 27, 15, 30, 0, tzinfo=tz_jst)
-    end_at = datetime.datetime(2021, 7, 27, 15, 40, 0, tzinfo=tz_jst)
+    start_at = datetime.datetime(2021, 7, 27, 18, 20, 0, tzinfo=tz_jst)
+    end_at = datetime.datetime(2021, 7, 27, 18, 30, 0, tzinfo=tz_jst)
 
     # 各種デバイスの設定
     devices = ['0881269a1ac6746f', '6e90dd68ec031ce1', '4f3b8bb564a3203c']
@@ -36,7 +36,7 @@ def main():
         print(f"max rssi: {max_y}")
         if max_y > -70:
             try:
-                d.show_graph(f"{id}", devices[id], export=False, created=now)
+                d.show_graph(f"{id}", devices[id], export=True, created=now)
             except:
                 print("timeout error")
         print("--------------------------------")
@@ -47,5 +47,6 @@ def main():
     # d = DeviceController('0881269a1ac6746f', start_at, end_at)
     # data = d.get_ble_graph_data()
     # print(data)
+
 
 main()

@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from plugin.datetime import tz_jst
+from plugin.datetime import tz_jst, td_jst
 import timeout_decorator
 import datetime
 import math
 import os
 import numpy as np
+
 
 class BaseController():
     @timeout_decorator.timeout(5)
@@ -26,16 +27,20 @@ class BaseController():
             color: str = graph["color"]
             label: str = graph["label"]
 
+            # TODO ここは+9時間とせずに、グラフ側の設定でなんとかしたい、、
+            def adjust_jst(t): return t + td_jst
+            x = np.array([adjust_jst(xi) for xi in x])
+
             if (len(x) > 0):
                 if (min_x == None or min(x) < min_x):
                     min_x = min(x)
-                if (max_x == None or  max(x) > max_x):
+                if (max_x == None or max(x) > max_x):
                     max_x = max(x)
 
             if (len(y) > 0):
-                if (min_y == None or  min(y) < min_y):
+                if (min_y == None or min(y) < min_y):
                     min_y = min(y)
-                if (max_y == None or  max(y) > max_y):
+                if (max_y == None or max(y) > max_y):
                     max_y = max(y)
 
             # 移動平均を算出
@@ -48,10 +53,10 @@ class BaseController():
                 y = np.delete(y, len(y) - 1)
 
             # 線 追加
-            if (len(x) > 2):
-                plt.plot(x, y, color=color, label=label)
-            else:
+            if (len(x) == 1):
                 plt.plot(x, y, color=color, label=label, marker="o")
+            else:
+                plt.plot(x, y, color=color, label=label)
 
         # グラフ設定
         plt.title(title)
@@ -63,7 +68,8 @@ class BaseController():
         diff_x_sec: int = (max_x - min_x).seconds
         diff_x_min: int = math.ceil(diff_x_sec / 60)
         diff_x: int = math.ceil(diff_x_min / 10)
-        ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), diff_x, tz=tz_jst))
+        ax.xaxis.set_major_locator(
+            mdates.MinuteLocator(range(60), diff_x, tz=tz_jst))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
         # y軸の設定

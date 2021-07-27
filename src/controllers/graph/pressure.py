@@ -22,8 +22,7 @@ class PressureGraphController():
         print("//////////////////////////////////////////////////\n")
 
         self.id = id
-        self.device: DeviceController = DeviceController(
-            id, start_at, end_at)  # デバイスコントローラー
+        self.device: DeviceController = DeviceController(id, start_at, end_at)  # デバイスコントローラー
 
     def show_graph(self):
         """

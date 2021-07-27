@@ -89,25 +89,6 @@ class DeviceController(FirestoreController):
         data = list(map(self._ble_cast, data))
         return data
 
-    # def get_device_id_data(self) -> dict:
-    #     """
-    #     id毎にCOCOAの信号データを取得する
-    #     """
-    #     device = {}
-    #     data = self._get_ble_list()
-    #     for item in data:
-    #         id = item['id']
-    #         rssi = item['rssi']
-    #         created = item['created']
-    #         obj = {'rssi': rssi, 'created': created}
-
-    #         if (id in device):
-    #             device[id].append(obj)
-    #         else:
-    #             device[id] = [obj]
-
-    #     return device
-
     def _ble_cast(self, data: dict) -> dict:
         """
         ble/{docId}/dataを変換
@@ -130,7 +111,7 @@ class DeviceController(FirestoreController):
             'created', '<=', self.end_at).get()
         return docs
 
-    def _get_pressure_data(self) -> list[dict]:
+    def get_pressure_data(self) -> list[dict]:
         """
         気圧情報を取得
         """

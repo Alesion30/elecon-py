@@ -73,6 +73,5 @@ class PressureGraphController():
         # 軸の設定
         ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), diff_x_div, tz=tz_jst))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        plt.ylim(995, 1014)
 
         plt.show()

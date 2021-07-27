@@ -53,10 +53,11 @@ class BaseController():
                 y = np.delete(y, len(y) - 1)
 
             # 線 追加
-            if (len(x) == 1):
-                plt.plot(x, y, color=color, label=label, marker="o")
-            else:
-                plt.plot(x, y, color=color, label=label)
+            plt.plot(x, y, color=color, label=label, marker=".")
+            # if (len(x) == 1):
+            #     plt.plot(x, y, color=color, label=label, marker="o")
+            # else:
+            #     plt.plot(x, y, color=color, label=label)
 
         # グラフ設定
         plt.title(title)

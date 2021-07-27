@@ -11,8 +11,8 @@ def main():
     fb_initialize_app()
 
     # 取得期間
-    start_at = datetime.datetime(2021, 7, 23, 17, 30, 0, tzinfo=tz_jst)
-    end_at = datetime.datetime(2021, 7, 23, 17, 40, 0, tzinfo=tz_jst)
+    start_at = datetime.datetime(2021, 7, 27, 12, 30, 0, tzinfo=tz_jst)
+    end_at = datetime.datetime(2021, 7, 27, 13, 30, 0, tzinfo=tz_jst)
 
     # 各種デバイスの設定
     devices = ['0881269a1ac6746f', '6e90dd68ec031ce1', '4f3b8bb564a3203c']
@@ -25,7 +25,10 @@ def main():
     now = datetime.datetime.now(tz_jst)
     for id in devices:
         print(id)
-        d.show_graph(f"{id}", devices[id], export=False, created=now)
+        try:
+            d.show_graph(f"{id}", devices[id], export=True, created=now)
+        except:
+            print("timeout error")
 
     # d = PressureGraphController('6e90dd68ec031ce1', start_at, end_at)
     # d.show_graph()

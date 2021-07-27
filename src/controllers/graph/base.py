@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from plugin.datetime import tz_jst
+import timeout_decorator
 import datetime
 import math
 import os
 import numpy as np
 
 class BaseController():
+    @timeout_decorator.timeout(5)
     def show_graph(self, title: str, graphs: list, export: bool = False, created: datetime = datetime.datetime.now(tz_jst)):
         # 画像
         if export:

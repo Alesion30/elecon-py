@@ -56,11 +56,12 @@ class CountGraphController():
 
         ax = plt.subplot()
         ax.grid(True)
-        # ax.bar(x_list, y_list, width=1/(24*60))
-        ax.plot(x_list, y_list)
+        # ax.bar(x_list, y_list, width=1/(diff_x_sec*60))
+        ax.plot(x_list, y_list, marker='.', linewidth=0)
 
         # 軸の設定
-        ax.xaxis.set_major_locator(mdates.MinuteLocator(range(60), diff_x_div, tz=tz_jst))
+        ax.xaxis.set_major_locator(mdates.MinuteLocator(
+            range(60), diff_x_div, tz=tz_jst))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
         plt.show()

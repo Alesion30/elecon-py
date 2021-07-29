@@ -3,7 +3,6 @@ from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 from controllers.firestore import FirestoreController
 from plugin.datetime import tz_jst, to_datetime
 import datetime
-import numpy as np
 
 
 class DeviceController(FirestoreController):

@@ -3,6 +3,7 @@ from plugin.datetime import tz_jst
 from controllers.device import DeviceController
 from controllers.graph.ble import BleGraphController
 from controllers.graph.pressure import PressureGraphController
+from controllers.graph.count import CountGraphController
 import datetime
 
 
@@ -11,8 +12,8 @@ def main():
     fb_initialize_app()
 
     # 取得期間
-    start_at = datetime.datetime(2021, 7, 27, 17, 35, 0, tzinfo=tz_jst)
-    end_at = datetime.datetime(2021, 7, 27, 17, 50, 0, tzinfo=tz_jst)
+    start_at = datetime.datetime(2021, 7, 27, 15, 30, 0, tzinfo=tz_jst)
+    end_at = datetime.datetime(2021, 7, 27, 15, 30, 10, tzinfo=tz_jst)
 
     # 各種デバイスの設定
     devices = ['0881269a1ac6746f', '6e90dd68ec031ce1', '4f3b8bb564a3203c']
@@ -41,9 +42,11 @@ def main():
     #             print("timeout error")
     #     print("--------------------------------")
 
-    # グラフを表示（エレベーター右）
-    d = PressureGraphController('6e90dd68ec031ce1', start_at, end_at)
-    d.show_graph()
+    # # グラフを表示（エレベーター右）
+    # d = PressureGraphController('6e90dd68ec031ce1', start_at, end_at)
+    # d.show_graph()
 
+    d = CountGraphController('right', start_at, end_at)
+    d.show_graph()
 
 main()

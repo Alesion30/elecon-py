@@ -44,13 +44,13 @@ class BaseController():
                     max_y = max(y)
 
             # 移動平均を算出
-            num = 3
-            if (len(x) >= num):
-                x = np.delete(x, 0)
-                x = np.delete(x, len(x) - 1)
-                y = np.convolve(y, np.ones(num) / num, mode='same')
-                y = np.delete(y, 0)
-                y = np.delete(y, len(y) - 1)
+            # num = 3
+            # if (len(x) >= num):
+            #     x = np.delete(x, 0)
+            #     x = np.delete(x, len(x) - 1)
+            #     y = np.convolve(y, np.ones(num) / num, mode='same')
+            #     y = np.delete(y, 0)
+            #     y = np.delete(y, len(y) - 1)
 
             # 線 追加
             plt.plot(x, y, color=color, label=label, marker=".")
